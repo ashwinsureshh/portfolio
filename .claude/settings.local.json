@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git clone https://github.com/ashwinsureshh/portfolio.git /Users/ashiwns/portfolio)"
+      "Bash(git clone https://github.com/ashwinsureshh/portfolio.git /Users/ashiwns/portfolio)",
+      "Bash(git add src/gsap-trial.d.ts src/components/utils/initialFX.ts)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(npm uninstall gsap-trial)",
+      "Bash(npm install gsap@latest)",
+      "Bash(git add -A)"
     ]
   }
 }
