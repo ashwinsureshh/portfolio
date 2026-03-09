@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git clone https://github.com/ashwinsureshh/portfolio.git /Users/ashiwns/portfolio)"
+    ]
+  }
+}

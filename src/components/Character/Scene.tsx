@@ -29,10 +29,10 @@ const Scene = () => {
 
       const renderer = new THREE.WebGLRenderer({
         alpha: true,
-        antialias: true,
+        antialias: window.devicePixelRatio < 2,
       });
       renderer.setSize(container.width, container.height);
-      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1;
       canvasDiv.current.appendChild(renderer.domElement);
@@ -106,8 +106,14 @@ const Scene = () => {
         landingDiv.addEventListener("touchstart", onTouchStart);
         landingDiv.addEventListener("touchend", onTouchEnd);
       }
-      const animate = () => {
+      let lastTime = 0;
+      const targetFPS = 60;
+      const frameInterval = 1000 / targetFPS;
+      const animate = (time: number) => {
         requestAnimationFrame(animate);
+        const elapsed = time - lastTime;
+        if (elapsed < frameInterval) return;
+        lastTime = time - (elapsed % frameInterval);
         if (headBone) {
           handleHeadRotation(
             headBone,
@@ -125,7 +131,7 @@ const Scene = () => {
         }
         renderer.render(scene, camera);
       };
-      animate();
+      animate(0);
       return () => {
         clearTimeout(debounce);
         scene.clear();
