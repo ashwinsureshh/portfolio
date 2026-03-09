@@ -114,3 +114,21 @@ a.contact-social {
     width: calc(100% - 25px);
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .contact-section h3 {
+    font-size: 30px;
+  }
+
+  a.contact-social {
+    font-size: 17px;
+  }
+
+  .contact-box h2 {
+    font-size: 15px;
+  }
+
+  .contact-section {
+    margin-top: 30px;
+  }
+}

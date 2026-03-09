@@ -3,6 +3,7 @@
   max-width: var(--cMaxWidth);
   width: var(--cWidth);
   justify-content: space-between;
+  align-items: center;
   padding: 20px 0px;
   margin-bottom: -100px;
   box-sizing: border-box;
@@ -12,24 +13,86 @@
   top: 0;
   z-index: 9999;
 }
-.header ul {
-  font-size: 12px;
+
+/* ── Hamburger button ── */
+.hamburger {
   display: flex;
   flex-direction: column;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  column-gap: 40px;
-  row-gap: 8px;
-  align-items: end;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 4px;
+  position: relative;
+  z-index: 10001;
 }
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: #eae5ec;
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.hamburger-open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger-open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.hamburger-open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ── Mobile nav: full-screen overlay (hidden by default) ── */
+.header ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: 40px;
+  column-gap: 0;
+  /* full-screen overlay */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100svh;
+  background-color: var(--backgroundColor, #08091a);
+  font-size: 26px;
+  letter-spacing: 3px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-12px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 9998;
+}
+
+.header ul.nav-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
 .header ul li {
-  margin-left: 0px;
-  letter-spacing: 1px;
-  color: #ccc;
+  color: #eae5ec;
   font-weight: 600;
   cursor: pointer;
+  letter-spacing: 2px;
 }
+
+/* Resume link only visible inside the mobile overlay */
+.mobile-resume-link {
+  display: list-item;
+  opacity: 0.5;
+}
+
 .navbar-connect {
   position: absolute;
   display: none;
@@ -40,43 +103,74 @@
   letter-spacing: 1px;
   font-weight: 500;
 }
+
 .navbar-title {
   font-weight: 700;
   font-size: 14px;
   letter-spacing: 0.2px;
 }
-@media only screen and (min-width: 500px) {
-  .header {
-    padding: 20px 0px;
+
+/* ── Desktop nav (>= 768px) ── */
+@media only screen and (min-width: 768px) {
+  .hamburger {
+    display: none;
   }
+
   .header ul {
+    position: static;
+    width: auto;
+    height: auto;
+    background-color: transparent;
     flex-direction: row;
     align-items: center;
-    font-size: 14px;
+    font-size: 12px;
+    letter-spacing: normal;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    column-gap: 40px;
+    row-gap: 8px;
+    transition: none;
   }
+
   .header ul li {
-    color: #eae5ec;
+    color: #ccc;
   }
+
+  /* Hide resume in desktop nav (it's in the sidebar) */
+  .mobile-resume-link {
+    display: none;
+  }
+
   .navbar-title {
     font-size: 16px;
   }
 }
+
 @media only screen and (min-width: 900px) {
   .navbar-connect {
     display: block;
   }
+
+  .header ul li {
+    color: #eae5ec;
+  }
 }
+
 @media only screen and (min-width: 1200px) {
   .header {
     padding: 35px 0px;
   }
+
   .header ul {
     column-gap: 80px;
     font-size: 16px;
   }
+
   .navbar-connect {
     font-size: 16px;
   }
+
   .navbar-title {
     font-size: 18px;
   }
