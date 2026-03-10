@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import "./styles/Work.css";
 import WorkImage from "./WorkImage";
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
@@ -16,10 +17,12 @@ const projects = [
 const Work = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [direction, setDirection] = useState(1);
 
   const goToSlide = useCallback(
-    (index: number) => {
+    (index: number, dir = 1) => {
       if (isAnimating) return;
+      setDirection(dir);
       setIsAnimating(true);
       setCurrentIndex(index);
       setTimeout(() => setIsAnimating(false), 500);
@@ -30,23 +33,51 @@ const Work = () => {
   const goToPrev = useCallback(() => {
     const newIndex =
       currentIndex === 0 ? projects.length - 1 : currentIndex - 1;
-    goToSlide(newIndex);
+    goToSlide(newIndex, -1);
   }, [currentIndex, goToSlide]);
 
   const goToNext = useCallback(() => {
     const newIndex =
       currentIndex === projects.length - 1 ? 0 : currentIndex + 1;
-    goToSlide(newIndex);
+    goToSlide(newIndex, 1);
   }, [currentIndex, goToSlide]);
+
+  const slideVariants: Variants = {
+    enter: (dir: number) => ({
+      x: dir > 0 ? 60 : -60,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.45, ease: "easeOut" as const },
+    },
+    exit: (dir: number) => ({
+      x: dir > 0 ? -60 : 60,
+      opacity: 0,
+      transition: { duration: 0.3, ease: "easeIn" as const },
+    }),
+  };
 
   return (
     <div className="work-section" id="work">
       <div className="work-container section-container">
-        <h2>
+        <motion.h2
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.65, ease: "easeOut" }}
+        >
           My <span>Work</span>
-        </h2>
+        </motion.h2>
 
-        <div className="carousel-wrapper">
+        <motion.div
+          className="carousel-wrapper"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.65, ease: "easeOut", delay: 0.2 }}
+        >
           {/* Navigation Arrows */}
           <button
             className="carousel-arrow carousel-arrow-left"
@@ -67,37 +98,46 @@ const Work = () => {
 
           {/* Slides */}
           <div className="carousel-track-container">
-            <div
-              className="carousel-track"
-              style={{
-                transform: `translateX(-${currentIndex * 100}%)`,
-              }}
-            >
-              {projects.map((project, index) => (
-                <div className="carousel-slide" key={index}>
-                  <div className="carousel-content">
-                    <div className="carousel-info">
-                      <div className="carousel-number">
-                        <h3>0{index + 1}</h3>
-                      </div>
-                      <div className="carousel-details">
-                        <h4>{project.title}</h4>
-                        <p className="carousel-category">
-                          {project.category}
-                        </p>
-                        <div className="carousel-tools">
-                          <span className="tools-label">Tools & Features</span>
-                          <p>{project.tools}</p>
-                        </div>
-                      </div>
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={currentIndex}
+                className="carousel-slide"
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+              >
+                <div className="carousel-content">
+                  <div className="carousel-info">
+                    <div className="carousel-number">
+                      <h3>0{currentIndex + 1}</h3>
                     </div>
-                    <div className="carousel-image-wrapper">
-                      <WorkImage image={project.image} alt={project.title} link={project.link} />
+                    <div className="carousel-details">
+                      <h4>{projects[currentIndex].title}</h4>
+                      <p className="carousel-category">
+                        {projects[currentIndex].category}
+                      </p>
+                      <div className="carousel-tools">
+                        <span className="tools-label">Tools & Features</span>
+                        <p>{projects[currentIndex].tools}</p>
+                      </div>
                     </div>
                   </div>
+                  <motion.div
+                    className="carousel-image-wrapper"
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                  >
+                    <WorkImage
+                      image={projects[currentIndex].image}
+                      alt={projects[currentIndex].title}
+                      link={projects[currentIndex].link}
+                    />
+                  </motion.div>
                 </div>
-              ))}
-            </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Dot Indicators */}
@@ -105,15 +145,14 @@ const Work = () => {
             {projects.map((_, index) => (
               <button
                 key={index}
-                className={`carousel-dot ${index === currentIndex ? "carousel-dot-active" : ""
-                  }`}
-                onClick={() => goToSlide(index)}
+                className={`carousel-dot ${index === currentIndex ? "carousel-dot-active" : ""}`}
+                onClick={() => goToSlide(index, index > currentIndex ? 1 : -1)}
                 aria-label={`Go to project ${index + 1}`}
                 data-cursor="disable"
               />
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
