@@ -7,7 +7,7 @@ export function initialFX() {
   smoother.paused(false);
   document.getElementsByTagName("main")[0].classList.add("main-active");
   gsap.to("body", {
-    backgroundColor: "#08091a",
+    backgroundColor: "#080808",
     duration: 0.5,
     delay: 1,
   });
