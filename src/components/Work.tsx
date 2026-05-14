@@ -6,6 +6,13 @@ import { MdArrowBack, MdArrowForward } from "react-icons/md";
 
 const projects = [
   {
+    title: "TruthLens",
+    category: "AI Misinformation Detector",
+    tools: "React, Flask, PostgreSQL, HuggingFace Transformers, RoBERTa, MiniLM NLI, Groq, Gemini, Railway",
+    image: "/images/truthlens.png",
+    link: "https://truthlensai.me",
+  },
+  {
     title: "CloudGuard",
     category: "Cybersecurity Dashboard",
     tools: "React, Flask, Socket.IO, Tailwind CSS, SQLite, Python, Kafka",
